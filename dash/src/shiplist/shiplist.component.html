@@ -1,0 +1,35 @@
+<hr>
+<h1 style="padding-left: 1em">I love you!!!</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-2 col-xs-1">
+      <div class="md-form">
+        <input
+            id="itemTitle"
+            name="textInputValue"
+            class="form-control"
+            type="text"
+            [(ngModel)]="itemTitle">
+        <label for="itemTitle">parts included in shipment</label>            
+      </div>
+      
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-5 col-xs-5">
+      <button
+        class="btn btn-primary"
+        data-toggle="button">
+        Complete
+      </button>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1">
+      <button
+          class="btn btn-primary active"
+          type="button"
+          id="postItem"
+          (click)="postItem($event)">
+        Post
+      </button>
+    </div>
+  </div>
+</div>
+<hr>

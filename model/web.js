@@ -5,7 +5,7 @@ var express_1 = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
-var api_1 = require("./src/api/api");
+var purchasesrestapi_1 = require("./src/rest/purchasesrestapi");
 // Creates and configures an ExpressJS web server.
 var Web = (function () {
     //Run configuration methods on the Express instance.
@@ -21,10 +21,10 @@ var Web = (function () {
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
     };
-    // Configure API endpoints.
+    // Configure API rest.
     Web.prototype.routes = function () {
-        this.express.use('/api/v1', express_1.Router()
-            .post('/', function (req, res, next) { return api_1.default.post(req, res, next); }));
+        this.express.use('/purchases', express_1.Router()
+            .post('/', function (req, res, next) { return purchasesrestapi_1.default.post(req, res, next); }));
     };
     return Web;
 }());

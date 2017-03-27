@@ -13,13 +13,6 @@ var Vendor = (function () {
     return Vendor;
 }());
 exports.Vendor = Vendor;
-var DateType = (function () {
-    function DateType(id) {
-        this.id = id;
-    }
-    return DateType;
-}());
-exports.DateType = DateType;
 var SignalType = (function () {
     function SignalType(id) {
         this.id = id;
@@ -48,4 +41,4 @@ var PoNum = (function () {
     return PoNum;
 }());
 exports.PoNum = PoNum;
-//# sourceMappingURL=model.js.map
+//# sourceMappingURL=purchases.js.map

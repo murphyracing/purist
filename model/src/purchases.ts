@@ -1,7 +1,6 @@
 export class Signal {
   public id: number;
   public type: SignalType;
-  public dateType: DateType;
   public date: Date;
   public subject: string;
   public qtyType: QtyType;
@@ -17,11 +16,6 @@ export class Vendor {
   constructor(id: number) { this.id = id; }
 }
 
-export class DateType {
-  public id: number;
-  public label: string;
-  constructor(id: number) { this.id = id; }
-}
 
 export class SignalType {
   public id: number;

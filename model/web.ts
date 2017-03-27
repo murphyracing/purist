@@ -5,7 +5,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 
-import ApiV1 from './src/api/api';
+import PurchasesRestApi from './src/rest/purchasesrestapi';
 
 // Creates and configures an ExpressJS web server.
 class Web {
@@ -28,11 +28,11 @@ class Web {
     this.express.use(bodyParser.urlencoded({ extended: false }));
   }
 
-  // Configure API endpoints.
+  // Configure API rest.
   private routes(): void {
     this.express.use(
-        '/api/v1', Router()
-                    .post('/', (req, res, next) => ApiV1.post(req, res, next))
+        '/purchases', Router()
+                    .post('/', (req, res, next) => PurchasesRestApi.post(req, res, next))
     );
   }
 

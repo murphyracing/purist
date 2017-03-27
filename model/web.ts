@@ -5,7 +5,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 
-import ApiV1 from './api/v1/api';
+import ApiV1 from './src/api/api';
 
 // Creates and configures an ExpressJS web server.
 class Web {

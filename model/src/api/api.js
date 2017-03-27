@@ -1,15 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var pg = require("pg");
-var connectionString = process.env.SCHIST_DB || 'postgres://localhost:5432/schist';
-var ApiV1 = (function () {
-    function ApiV1() {
+var model_1 = require("../model");
+var connectionString = process.env.PURIST_DB || 'postgres://localhost:5432/purist';
+var Api = (function () {
+    function Api() {
     }
-    ApiV1.prototype.post = function (req, res, next) {
-        /* Turn the REST POST into a DB INSERT */
-        var results = [];
-        var data = { text: req.body.text, complete: false };
-        // get a database connection from the pool and insert and item
+    Api.prototype.post = function (req, res, next) {
+        /* Insert a new signal from the given object */
+        var data = JSON.parse(req.body);
+        var model = new model_1.Signal();
+        model.type = new model_1.SignalType(data.type_id);
+        model.dateType = new model_1.DateType(data.dateType);
+        model.date = data.date;
+        model.subject = data.subject;
+        model.qtyType = new model_1.QtyType(data.qtyType);
+        model.qty = data.qty;
+        model.vendor = new model_1.Vendor(data.vendor);
+        model.po = new model_1.PoNum(data.po);
+        model.tracking = data.tracking;
+        // get a database connection from the pool and insert an item
         pg.connect(connectionString, function (err, client, done) {
             if (err) {
                 // no DB connection
@@ -30,7 +40,7 @@ var ApiV1 = (function () {
         });
         /* pg.connect */
     }; /* ==== POST ==== */
-    return ApiV1;
+    return Api;
 }());
-exports.default = new ApiV1();
+exports.default = new Api();
 //# sourceMappingURL=api.js.map

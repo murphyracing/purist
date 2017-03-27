@@ -5,7 +5,7 @@ var express_1 = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
-var api_1 = require("./api/v1/api");
+var api_1 = require("./src/api/api");
 // Creates and configures an ExpressJS web server.
 var Web = (function () {
     //Run configuration methods on the Express instance.

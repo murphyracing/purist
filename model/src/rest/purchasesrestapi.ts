@@ -1,8 +1,7 @@
 import * as pg from 'pg';
 import {NextFunction, Request, Response} from 'express';
-import {PoNum, QtyType, Signal, SignalType, Vendor} from "../purchases";
-
-const connectionString = process.env.PURIST_DB || 'postgres://localhost:5432/purist';
+import {PoNum, QtyType, Signal, SignalType, Vendor} from '../purchases';
+import Db from '../db';
 
 class PurchasesRestApi {
   public post(req: Request, res: Response, next: NextFunction): void {
@@ -21,7 +20,7 @@ class PurchasesRestApi {
       m.tracking = data.tracking;
 
     /* db transaction */
-    pg.connect(connectionString, (err, client, done) => {
+    pg.connect(Db.url, (err, client, done) => {
       if (err) {
         done();
         console.log(err);

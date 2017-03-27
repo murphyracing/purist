@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var pg = require("pg");
 var purchases_1 = require("../purchases");
-var connectionString = process.env.PURIST_DB || 'postgres://localhost:5432/purist';
+var db_1 = require("../db");
 var PurchasesRestApi = (function () {
     function PurchasesRestApi() {
     }
@@ -20,7 +20,7 @@ var PurchasesRestApi = (function () {
         m.po = new purchases_1.PoNum(data.po);
         m.tracking = data.tracking;
         /* db transaction */
-        pg.connect(connectionString, function (err, client, done) {
+        pg.connect(db_1.default.url, function (err, client, done) {
             if (err) {
                 done();
                 console.log(err);

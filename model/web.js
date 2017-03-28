@@ -24,6 +24,7 @@ var Web = (function () {
     // Configure API rest.
     Web.prototype.routes = function () {
         this.express.use('/purchases', express_1.Router()
+            .get('/', function (req, res, next) { return purchasesrestapi_1.default.getAll(req, res, next); })
             .post('/', function (req, res, next) { return purchasesrestapi_1.default.post(req, res, next); }));
     };
     return Web;

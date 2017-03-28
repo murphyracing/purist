@@ -1,6 +1,12 @@
 import {Component, Input} from '@angular/core';
 import {ShipListData} from './ShipListData';
 
+
+class Row {
+  constructor(public rowIndex: number, public label: string) {}
+}
+
+
 export class ShippedSale {
   saleNo: number;
   customer: string;
@@ -16,8 +22,26 @@ export class ShippedSale {
 export class ShipListComponent {
   private itemTitle: string;
   private itemIsComplete: boolean;
+  private shipList: Row[];
+  private errorMessage: string;
 
-  constructor (private shipData: ShipListData) {}
+
+  constructor (private shipData: ShipListData) {
+    this.fetchData();
+  }
+
+
+  fetchData() {
+    this.shipList = [];
+    this.shipData.getAll().subscribe(
+      result => {
+        for (let i = 0; i < result.length; ++i) {
+          this.shipList.push(new Row(i, result[i].subject));
+        }
+      },
+      error => { console.error(error); this.errorMessage = error; }
+    );
+  }
 
 
   postItem(event) {

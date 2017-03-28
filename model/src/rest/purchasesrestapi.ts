@@ -4,6 +4,17 @@ import {PoNum, QtyType, Signal, SignalType, Vendor} from '../purchases';
 import Db from '../db';
 
 class PurchasesRestApi {
+  public getAll(req: Request, res: Response, next: NextFunction): void {
+    let obj = [
+      {subject: 'test'},
+      {subject: 'hello, world!'},
+      {subject: 'like being a kid again'}
+    ];
+
+    res.json(obj);
+  }
+
+
   public post(req: Request, res: Response, next: NextFunction): void {
     /* Insert a new signal from the given object */
     const data = req.body;

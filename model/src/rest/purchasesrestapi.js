@@ -6,6 +6,14 @@ var db_1 = require("../db");
 var PurchasesRestApi = (function () {
     function PurchasesRestApi() {
     }
+    PurchasesRestApi.prototype.getAll = function (req, res, next) {
+        var obj = [
+            { subject: 'test' },
+            { subject: 'hello, world!' },
+            { subject: 'like being a kid again' }
+        ];
+        res.json(obj);
+    };
     PurchasesRestApi.prototype.post = function (req, res, next) {
         /* Insert a new signal from the given object */
         var data = req.body;

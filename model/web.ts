@@ -32,7 +32,8 @@ class Web {
   private routes(): void {
     this.express.use(
         '/purchases', Router()
-                    .post('/', (req, res, next) => PurchasesRestApi.post(req, res, next))
+            .get('/', (req, res, next) => PurchasesRestApi.getAll(req, res, next))
+            .post('/', (req, res, next) => PurchasesRestApi.post(req, res, next))
     );
   }
 

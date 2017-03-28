@@ -9,9 +9,18 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class ShipListData {
-  private url = 'http://localhost:3000/api/v1';
+  private url = 'http://localhost:3000/purchases';
 
   constructor (private http: Http) {}
+
+
+  getAll(): Observable<any[]> {
+    return this.http
+      .get(this.url)
+      .map((res: Response) => res.json())
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
+
 
   postItem(text: string, complete: boolean): Observable<Object> {
     const body = {text: text, complete: complete};

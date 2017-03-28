@@ -3,7 +3,7 @@ import {ShipListData} from './ShipListData';
 
 
 class Row {
-  constructor(public rowIndex: number, public label: string) {}
+  constructor(public rowIndex: number, public signal: any) {}
 }
 
 
@@ -36,7 +36,7 @@ export class ShipListComponent {
     this.shipData.getAll().subscribe(
       result => {
         for (let i = 0; i < result.length; ++i) {
-          this.shipList.push(new Row(i, result[i].subject));
+          this.shipList.push(result[i]);
         }
       },
       error => { console.error(error); this.errorMessage = error; }

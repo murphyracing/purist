@@ -14,8 +14,9 @@ var Vendor = (function () {
 }());
 exports.Vendor = Vendor;
 var SignalType = (function () {
-    function SignalType(id) {
+    function SignalType(id, label) {
         this.id = id;
+        this.label = label;
     }
     return SignalType;
 }());

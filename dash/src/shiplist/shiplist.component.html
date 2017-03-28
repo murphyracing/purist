@@ -1,10 +1,18 @@
-<hr>
+<br/>
 <h1 style="padding-left: 1em">I love you!!!</h1>
+<hr>
 <div class="container">
-  <div class="row" *ngFor="let row of shipList">
+  <div class="row" *ngFor="let signal of shipList">
     <div class="col">
-      <span style="font-weight: bold">{{ row.rowIndex }}</span>
-      <span>{{ row.label }}</span>
+      <span>{{ signal.signaltype }}</span>
+      <span>{{ signal.qty }}</span>
+      <span>{{ signal.qtytype }}</span>
+    </div>
+    <div class="col">
+      <span>{{ signal.subject }}</span>
+    </div>
+    <div class="col">
+      <span>{{ signal.business_name }}</span>
     </div>
   </div>
 </div>

@@ -18,10 +18,7 @@ export class Vendor {
 
 
 export class SignalType {
-  public id: number;
-  public label: string;
-  constructor(id: number) { this.id = id; }
-
+  constructor(public id: number, public label: string) {}
 }
 
 export class QtyType {

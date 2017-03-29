@@ -21,9 +21,9 @@ class PurchasesRestApi {
     db.each(query, [], (sig) => {
         results.push(sig);
       })
-        .then(data => {
-          res.json(results);
-        })
+      .then(data => {
+        res.json(results);
+      })
       .catch(error => {
         console.log(error);
         return res.status(500).json({success: false, error: error});

@@ -1,23 +1,22 @@
 import * as pg from 'pg';
 import {NextFunction, Request, Response} from 'express';
-import {PoNum, QtyType, Signal, SignalType, Vendor} from '../purchases';
-import db from '../db';
+import db from './db';
 
 class PurchasesRestApi {
   public getAll(req: Request, res: Response, next: NextFunction): void {
     const results = [];
     const query =
         'SELECT ' +
-        'signal.id, signal.date, signaltype_id, signaltype.signaltype, qtytype_id, qtytype.qtytype,' +
+        'signal.id, signal.date, signalTypeId, signalType.signalType, qtyTypeId, qtyType.qtyType,' +
         'signal.qty, signal.subject, ' +
-        'ponum.group_id, ponum_group.group, ponum.member, vendor_id, vendor.business_name, ' +
+        'purchaseNum.groupId, purchaseGroup.group, purchaseNum.member, vendorId, vendor.label, ' +
         'signal.tracking ' +
         'FROM signal ' +
-        'JOIN signaltype ON signal.signaltype_id = signaltype.id ' +
-        'JOIN qtytype ON signal.qtytype_id = qtytype.id ' +
-        'JOIN ponum  ON signal.ponum_id = ponum.id ' +
-        'JOIN ponum_group ON ponum.group_id = ponum_group.id ' +
-        'JOIN vendor ON signal.vendor_id = vendor.id';
+        'JOIN signalType ON signal.signalTypeId = signalType.id ' +
+        'JOIN qtyType ON signal.qtyTypeId = qtyType.id ' +
+        'JOIN purchaseNum  ON signal.purchaseNumId = purchaseNum.id ' +
+        'JOIN purchaseGroup ON purchaseNum.groupId = purchaseGroup.id ' +
+        'JOIN vendor ON signal.vendorId = vendor.id';
     db.each(query, [], (sig) => {
         results.push(sig);
       })
@@ -45,9 +44,9 @@ class PurchasesRestApi {
 
       client.query(
         'INSERT INTO ' +
-          'signal(date, signaltype_id, subject, qtytype_id, qty, ponum_id, vendor_id, tracking)' +
+          'signal(date, signalTypeId, subject, qtyTypeId, qty, purchaseNumId, vendorId, tracking)' +
           'VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
-          [m.date, m.signaltype_id, m.subject, m.qtytype_id, m.qty, m.ponum_id, m.vendor_id, m.tracking]
+          [m.date, m.signalTypeId, m.subject, m.qtyTypeId, m.qty, m.purchaseNumId, m.vendorId, m.tracking]
       ).then(() => {
           console.log("[ INSERT ] ", JSON.stringify(m));
           res.json({success: true});

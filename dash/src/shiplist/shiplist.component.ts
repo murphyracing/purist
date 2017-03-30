@@ -36,6 +36,7 @@ export class ShipListComponent {
     this.shipData.getAll().subscribe(
       result => {
         for (let i = 0; i < result.length; ++i) {
+          console.log(result[i]);
           this.shipList.push(result[i]);
         }
       },

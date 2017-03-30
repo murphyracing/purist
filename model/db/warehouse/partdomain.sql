@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS public.partdomain;
+DROP TABLE IF EXISTS public.partDomain;
 
-CREATE TABLE public.partdomain (
+CREATE TABLE public.partDomain (
 	id SERIAL PRIMARY KEY,
-	name NOT NULL TEXT
+	label TEXT NOT NULL
 );
 
 DROP INDEX IF EXISTS ux_partdomain_name;
-CREATE UNIQUE INDEX ux_partdomain_name ON public.partdomain (name);
+CREATE UNIQUE INDEX ux_partdomain_name ON public.partDomain (name);

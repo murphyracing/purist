@@ -9,7 +9,7 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class ShipListData {
-  private url = 'http://localhost:3000/purchases';
+  private url = 'http://localhost:3000/pay';
 
   constructor (private http: Http) {}
 

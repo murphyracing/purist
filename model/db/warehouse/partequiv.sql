@@ -2,8 +2,8 @@ DROP TABLE IF EXISTS public.partequiv;
 
 CREATE TABLE public.partequiv (
 	id SERIAL PRIMARY KEY,
-	a_id NOT NULL INT REFERENCES partno (id),
-	b_id NOT NULL INT REFERENCES partno (id)
+	a_id NOT NULL INT REFERENCES partNum (id),
+	b_id NOT NULL INT REFERENCES partNum (id)
 );
 
 DROP INDEX IF EXISTS ux_partequiv_a_b;

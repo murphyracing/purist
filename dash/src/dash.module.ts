@@ -5,6 +5,7 @@ import { FormsModule }   from '@angular/forms'; // <-- NgModel lives here
 import { BrowserModule } from '@angular/platform-browser';
 
 import { ShipListComponent }  from './shiplist/shiplist.component';
+import { PayListComponent }  from './paylist/paylist.component';
 
 @NgModule({
   imports: [
@@ -15,8 +16,9 @@ import { ShipListComponent }  from './shiplist/shiplist.component';
     NgbModule.forRoot(),
   ],
   declarations: [
-    ShipListComponent
+    ShipListComponent,
+    PayListComponent
   ],
-  bootstrap: [ ShipListComponent ]
+  bootstrap: [ ShipListComponent, PayListComponent ]
 })
 export class DashModule { }

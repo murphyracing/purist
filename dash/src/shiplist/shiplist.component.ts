@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {ShipListData} from './ShipListData';
+import {PuristData} from '../puristdata';
 
 
 class Row {
@@ -17,7 +17,7 @@ export class ShippedSale {
   selector: 'app-ship-list',
   templateUrl: 'shiplist.component.html',
   styleUrls: ['shiplist.component.css'],
-  providers: [ShipListData]
+  providers: [PuristData]
 })
 export class ShipListComponent {
   private itemTitle: string;
@@ -26,14 +26,14 @@ export class ShipListComponent {
   private errorMessage: string;
 
 
-  constructor (private shipData: ShipListData) {
+  constructor (private shipData: PuristData) {
     this.fetchData();
   }
 
 
   fetchData() {
     this.shipList = [];
-    this.shipData.getAll().subscribe(
+    this.shipData.getAll('purchase').subscribe(
       result => {
         for (let i = 0; i < result.length; ++i) {
           console.log(result[i]);
@@ -47,7 +47,7 @@ export class ShipListComponent {
 
   postItem(event) {
     event.preventDefault();
-    this.shipData.postItem(this.itemTitle, this.itemIsComplete).subscribe(
+    this.shipData.postItem('purchase', this.itemTitle, this.itemIsComplete).subscribe(
         result => this.itemTitle = JSON.stringify(result),
         error => { console.error(error); this.itemTitle = error; }
     );

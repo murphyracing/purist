@@ -1,31 +1,20 @@
 <br/>
 <h1 style="padding-left: 1em">I love you!!!</h1>
 <hr>
-<div class="container">
-  <div class="row" *ngFor="let p of shipList">
-    <div class="col">
-      <span>{{ p.vendor }}</span>
-      <span>{{ p.customer }}</span>
+<div class="container wide">
+  <div class="row">
+    <div class="col-sm-2">
+      <span class="column-heading">Vendor</span>
     </div>
-    <div class="col">
-      <input type="text" value="{{ p.invoice }}"/>
-      <input type="text" value="{{ p.amount }}"/>
-
+    <div class="col-sm-2">
+      <span class="column-heading">Customer</span>
     </div>
-    <div class="col">
-      <span>{{ p.approvedOn }}</span>
+    <div class="col-sm-2">
+      <span class="column-heading">Invoice</span>
     </div>
-    <div class="col">
-      <span>{{ p.check }}</span>
-      <span>{{ p.ccType }}</span>
-      <span>{{ p.cc }}</span>
-    </div>
-    <div style="
-      border-bottom: 1px dotted lightgray;
-      width:90%;
-      margin-left:auto;
-      margin-right:auto">
-    </div>
+  </div>
+  <div class="row" *ngFor="let p of payList; let i = index">
+    <app-payment-form [data]="p" style="width:100%"></app-payment-form>
   </div>
 </div>
 <hr>

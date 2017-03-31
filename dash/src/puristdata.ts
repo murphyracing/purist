@@ -5,11 +5,12 @@ import { Observable } from 'rxjs/Observable';
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 
 
 @Injectable()
 export class PuristData {
-  private url = 'http://localhost:3000/';
+  private url = 'http://192.168.2.91:3000/';
 
   constructor (private http: Http) {}
 

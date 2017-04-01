@@ -1,0 +1,58 @@
+<form #form="ngForm" [formGroup]="payment">
+  <div class="row">
+    <div class="col-sm-1" style="margin-top:auto;margin-bottom:auto;padding:0">
+      <i class="fa fa-undo"
+         aria-hidden="true"
+         [hidden]="!payment.dirty"
+         style="display:block;float:right"
+         (click)="resetForm()">
+      </i>
+    </div>
+    <div class="col-sm-2">
+      <div class="md-form">
+        <input
+          type="text"
+          id="vendor"
+          [formControl]="payment.controls['vendor']"
+          class="form-control"
+          (blur)="onSubmit()"
+          (keydown)="onKeyDown('vendor', $event.keyCode)">
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="md-form">
+        <input
+          type="text"
+          id="customer"
+          [formControl]="payment.controls['customer']"
+          class="form-control"
+          [ngClass]="{
+            'has-error': !payment.controls['customer'].valid,
+            'is-dirty': payment.controls['customer'].dirty
+          }"
+          (blur)="onSubmit()"
+          (keydown)="onKeyDown('customer', $event.keyCode)">
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="md-form">
+        <input
+          type="text"
+          id="invoice"
+          [formControl]="payment.controls['invoice']"
+          class="form-control"
+          [ngClass]="{
+            'has-error': !payment.controls['invoice'].valid,
+            'is-dirty': payment.controls['invoice'].dirty
+          }"
+          (blur)="onSubmit()"
+          (keydown)="onKeyDown('invoice', $event.keyCode)">
+      </div>
+    </div>
+  </div>
+
+  <!--<input formControlName="amount" id="amount" type="text">
+  <label for="amount">amount</label>
+  <input formControlName="approvedOn" id="approvedOn" type="text">
+  <label for="approvedOn">approved on</label>-->
+</form>

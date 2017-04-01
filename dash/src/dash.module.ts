@@ -6,7 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { ShipListComponent }  from './shiplist/shiplist.component';
 import { PayListComponent }  from './paylist/paylist.component';
-import {PaymentFormComponent} from "./paylist/payment-form.component";
+import {PaymentFormComponent} from './paylist/payment-form.component';
 
 @NgModule({
   imports: [

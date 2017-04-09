@@ -1,0 +1,67 @@
+<table id="example"
+       class="table table-striped">
+  <thead>
+  <tr>
+    <th *ngFor="let column of columns" style="width: {{column.width}}">
+      {{column.title}}
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td *ngFor="let column of columns">
+      <input type="text" [(ngModel)]="column.filter" (ngModelChange)="onFilter(column.name, $event)">
+    </td>
+  </tr>
+  <tr *ngFor="let item of data| dataFilter: columnFilters">
+    <td>{{item.vendor}}</td>
+    <td>{{item.customer}}</td>
+    <td class="text-right">{{item.invoice}}</td>
+    <td>{{item.city | uppercase}}</td>
+  </tr>
+  </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="4">
+    </td>
+  </tr>
+  </tfoot>
+</table>
+
+<hr>
+
+
+<table class="table table-striped"
+       [mfData]="data | dataFilter: columnFilters"
+       #mf="mfDataTable"
+       [mfRowsOnPage]="rowsOnPage"
+       [(mfSortBy)]="sortBy"
+       [(mfSortOrder)]="sortOrder">
+  <thead>
+  <tr>
+    <th *ngFor="let column of columns" style="width: {{column.width}}">
+      <mfDefaultSorter by="{{column.name}}">{{column.title}}</mfDefaultSorter>
+    </th>
+  </tr>
+  <tr>
+    <th *ngFor="let column of columns">
+      <input type="text" [(ngModel)]="column.filter" (ngModelChange)="onFilter(column.name, $event)">
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of mf.data">
+    <td>{{item.vendor}}</td>
+    <td>{{item.customer}}</td>
+    <td class="text-right">{{item.invoice}}</td>
+    <td>{{item.city | uppercase}}</td>
+  </tr>
+  </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="4">
+      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+    </td>
+  </tr>
+  </tfoot>
+</table>

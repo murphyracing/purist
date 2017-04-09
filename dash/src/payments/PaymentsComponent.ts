@@ -1,23 +1,23 @@
-import { Component, Input } from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import { PuristData } from '../puristdata';
 
 
 @Component({
   selector: 'app-pay-list',
-  templateUrl: 'paylist.component.html',
-  styleUrls: ['paylist.component.css'],
+  templateUrl: 'PaymentsComponent.html',
+  styleUrls: ['PaymentsComponent.css'],
   providers: [PuristData]
 })
 export class PayListComponent {
   private servicePath = 'pay';
   private payList: Array<Object>;
   private errorMessage: string;
+  private filterQuery: string;
 
 
   constructor (private data: PuristData) {
     this.fetchData();
   }
-
 
   fetchData() {
     this.payList = [];

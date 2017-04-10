@@ -1,5 +1,9 @@
 <p-growl [value]="msgs"></p-growl>
 
+<p-dialog header="Error" [(visible)]="error.show">
+  <div>{{error.msg}}</div>
+</p-dialog>
+
 <div id="payments-search" class="ui-widget-header">
   <i class="fa fa-search" style="margin:8px 4px 0 0; padding-right: 8px"></i>
   <input #gb type="text" pInputText size="50" placeholder="Search All" style="flex: 1">

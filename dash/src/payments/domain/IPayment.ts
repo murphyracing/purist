@@ -3,4 +3,5 @@ export interface IPayment {
   customer: string;
   invoice: string;
   amount: string;
+  approvedOn: Date;
 }

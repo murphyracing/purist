@@ -2,9 +2,15 @@ import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {DataTable, Message} from 'primeng/primeng';
 import {Http} from '@angular/http';
 import {IPayment} from './domain/IPayment';
+import {PaymentDataSource} from './PaymentDataSource';
 
-export interface IColumn {
+interface IColumn {
   field: string;
+}
+
+interface IError {
+  msg: string;
+  show: boolean;
 }
 
 @Component({
@@ -13,7 +19,7 @@ export interface IColumn {
   templateUrl: 'PayTableComponent.html',
   styleUrls: ['PayTableComponent.css'],
 })
-export class PayTableComponent implements OnInit {
+export class PayTableComponent {
   columns: IColumn[] = [
     {field: 'vendor'},
     {field: 'customer'},
@@ -22,7 +28,10 @@ export class PayTableComponent implements OnInit {
   payments: IPayment[];
   msgs: Message[];
 
-  constructor (private http: Http) {
+  error: IError = { msg: '', show: false };
+
+  constructor (private http: Http,
+               private ds: PaymentDataSource) {
     if (localStorage.columns) {
       try {
         const colSettings = JSON.parse(localStorage.columns);
@@ -34,18 +43,21 @@ export class PayTableComponent implements OnInit {
         localStorage.columns = '';
       }
     }
-  }
+    ds.all().subscribe(
+      result => {
 
-  ngOnInit() {
-    this.http.get('assets/data.json')
-      .subscribe((data) => {
-        setTimeout(() => {
-            this.payments = <IPayment[]> data.json();
-            this.msgs = [];
-            this.msgs.push({severity: 'info', summary: 'Payments', 'detail': 'Data Ready'});
-          },
-        1000);
-    });
+      },
+      error => {
+        this.error.msg = `
+        I can't seem to find any payment data to show you.
+        <br>
+        When I looked in the usual place, I found this error instead:
+        <br>
+        <pre>${error}</pre>
+        `
+        this.error.show = true;
+      }
+    );
   }
 
   onFieldChanged(payment, field) {

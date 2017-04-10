@@ -1,45 +1,45 @@
-import * as http from 'http';
-import * as debug from 'debug';
+import * as express from "express";
+import * as http from "http";
+import * as socketIO from "socket.io";
 
-import Web from './web';
+import { RestRouterService } from './RestRouterService';
 
-debug('ts-express:server');
+class Server {
+  public static readonly PORT = 3000;
+  private port: number;
+  private server: any;
+  private io: any;
+  public rest: RestRouterService;
 
-const port = normalizePort(process.env.PORT || 3000);
-Web.set('port', port);
+  constructor() {
+    this.port = process.env.PORT || Server.PORT;
+    this.rest = new RestRouterService(this.port);
 
-const server = http.createServer(Web);
+    this.server = http.createServer(this.rest.express);
+    this.io = socketIO(this.server);
+    this.io.set('origins', 'http://192.168.2.91:4200');
+  }
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  public listen(): void {
+    this.server.listen(this.port, () => {
+      console.log('Running server on port %s', this.port);
+    });
 
-function normalizePort(val: number|string): number|string|boolean {
-  let port: number = (typeof val === 'string') ? parseInt(val, 10) : val;
-  if (isNaN(port)) return val;
-  else if (port >= 0) return port;
-  else return false;
-}
+    this.io.on('connect', (socket: any) => {
+      console.log('Connected client on port %s.', this.port);
+      let i = 0;
+      setInterval(() => this.io.emit('message', ++i), 1000);
+      socket.on('message', (m) => {
+        console.log('[server](message): %s', JSON.stringify(m));
+        this.io.emit('message', m);
+      });
 
-function onError(error: NodeJS.ErrnoException): void {
-  if (error.syscall !== 'listen') throw error;
-  let bind = (typeof port === 'string') ? 'Pipe ' + port : 'Port ' + port;
-  switch(error.code) {
-    case 'EACCES':
-      console.error(`${bind} requires elevated privileges`);
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(`${bind} is already in use`);
-      process.exit(1);
-      break;
-    default:
-      throw error;
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
+    });
   }
 }
 
-function onListening(): void {
-  let addr = server.address();
-  let bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
-}
+let server = new Server();
+server.listen();

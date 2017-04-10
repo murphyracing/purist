@@ -1,4 +1,3 @@
-import * as http2 from 'spdy';
 import * as express from 'express';
 import {Router} from 'express';
 import * as logger from 'morgan';
@@ -9,14 +8,14 @@ import PayApi from './src/payApi';
 import purchaseApi from './src/purchaseApi';
 
 // Creates and configures an ExpressJS web server.
-class Web {
-
+export class RestRouterService {
   // ref to Express instance
   public express: express.Application;
 
   //Run configuration methods on the Express instance.
-  constructor() {
+  constructor(port: number) {
     this.express = express();
+    this.express.set('port', port);
     this.middleware();
     this.routes();
   }
@@ -27,13 +26,13 @@ class Web {
     this.express.use(cookieParser());
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
-    this.express.use(function (req, res, next) {
+    this.express.use((req, res, next) => {
       // Website you wish to allow to connect
-      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Origin', 'http://192.168.2.91:4200');
       // Request methods you wish to allow
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
       // Request headers you wish to allow
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
       // Set to true if you need the website to include cookies in the requests sent
       // to the API (e.g. in case you use sessions)
       res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -57,5 +56,4 @@ class Web {
   }
 
 
-}
-export default new Web().express;
+};

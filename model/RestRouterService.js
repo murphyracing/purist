@@ -8,26 +8,27 @@ var cookieParser = require("cookie-parser");
 var payApi_1 = require("./src/payApi");
 var purchaseApi_1 = require("./src/purchaseApi");
 // Creates and configures an ExpressJS web server.
-var Web = (function () {
+var RestRouterService = (function () {
     //Run configuration methods on the Express instance.
-    function Web() {
+    function RestRouterService(port) {
         this.express = express();
+        this.express.set('port', port);
         this.middleware();
         this.routes();
     }
     // Configure Express middleware.
-    Web.prototype.middleware = function () {
+    RestRouterService.prototype.middleware = function () {
         this.express.use(logger('dev'));
         this.express.use(cookieParser());
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
         this.express.use(function (req, res, next) {
             // Website you wish to allow to connect
-            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Origin', 'http://192.168.2.91:4200');
             // Request methods you wish to allow
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
             // Request headers you wish to allow
-            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+            res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             // Set to true if you need the website to include cookies in the requests sent
             // to the API (e.g. in case you use sessions)
             res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -36,7 +37,7 @@ var Web = (function () {
         });
     };
     // Configure API rest.
-    Web.prototype.routes = function () {
+    RestRouterService.prototype.routes = function () {
         this.express.use('/purchase', express_1.Router()
             .get('/', function (req, res, next) { return purchaseApi_1.default.getAll(req, res, next); })
             .post('/', function (req, res, next) { return purchaseApi_1.default.post(req, res, next); }));
@@ -44,7 +45,8 @@ var Web = (function () {
             .get('/', function (req, res, next) { return payApi_1.default.getAll(req, res, next); })
             .post('/', function (req, res, next) { return payApi_1.default.post(req, res, next); }));
     };
-    return Web;
+    return RestRouterService;
 }());
-exports.default = new Web().express;
-//# sourceMappingURL=web.js.map
+exports.RestRouterService = RestRouterService;
+;
+//# sourceMappingURL=RestRouterService.js.map

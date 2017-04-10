@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DataTable, Message} from 'primeng/primeng';
 import {Http} from '@angular/http';
 import {IPayment} from './domain/IPayment';
 import {PaymentDataSource} from './PaymentDataSource';
 import {RestDataSource} from '../RestDataSource';
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from "rxjs";
 
 interface IColumn {
   field: string;
@@ -23,7 +25,7 @@ interface IError {
   styleUrls: ['PayTableComponent.css'],
   providers: [RestDataSource, PaymentDataSource]
 })
-export class PayTableComponent {
+export class PayTableComponent implements OnDestroy {
   columns: IColumn[] = [
     {field: 'type', header: 'Type'},
     {field: 'payTo', header: 'Pay To'},
@@ -33,10 +35,14 @@ export class PayTableComponent {
   payments: IPayment[];
   msgs: Message[];
 
+  srvMsgStream: Subscription;
+
   error: IError = { msg: '', innerMsg: '', show: false };
 
   constructor (private http: Http,
                private ds: PaymentDataSource) {
+    this.srvMsgStream = ds.serverMessages().subscribe(msg => this.onServerMsg(msg));
+
     if (localStorage.columns) {
       try {
         const colSettings = JSON.parse(localStorage.columns);
@@ -65,6 +71,14 @@ export class PayTableComponent {
         this.error.show = true;
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.srvMsgStream.unsubscribe();
+  }
+
+  onServerMsg(msg) {
+    console.log(msg);
   }
 
   onFieldChanged(payment, field) {

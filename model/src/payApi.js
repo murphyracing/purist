@@ -5,6 +5,8 @@ var db_1 = require("./db");
 var PayApi = (function () {
     function PayApi() {
     }
+    PayApi.prototype.subscribePush = function (req, res, next) {
+    }; /* ==== subscribePush ==== */
     PayApi.prototype.getAll = function (req, res, next) {
         var results = [];
         var query = "\n      SELECT\n        vendor.label AS \"vendor\",\n        customer.label AS \"customer\",\n        invoice.label AS \"invoice\",\n        payable.amount AS \"amount\",\n        payable.approvedOn AS \"approved\",\n        \"check\".number AS \"check #\",\n        ccType.label AS \"cc type\",\n        payment.cclastfour AS \"cc\"\n      FROM pay.payment\n      LEFT OUTER JOIN pay.payable ON payment.payableId = pay.payable.id\n      LEFT OUTER JOIN pay.\"check\" ON payment.checkId = pay.\"check\".id\n      LEFT OUTER JOIN pay.ccType ON payment.ccTypeId = pay.ccType.id\n      LEFT OUTER JOIN vendor ON payable.vendorId = vendor.id\n      LEFT OUTER JOIN customer ON payable.customerId = customer.id\n      LEFT OUTER JOIN invoice ON payable.invoiceId = invoice.id\n    ";

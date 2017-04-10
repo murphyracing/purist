@@ -3,6 +3,10 @@ import {NextFunction, Request, Response} from 'express';
 import db from './db';
 
 class PayApi {
+  public subscribePush(req: Request, res: Response, next: NextFunction): void {
+
+  } /* ==== subscribePush ==== */
+
   public getAll(req: Request, res: Response, next: NextFunction): void {
     const results = [];
     let query = `

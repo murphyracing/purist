@@ -5,12 +5,13 @@ var express_1 = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
-var payApi_1 = require("./src/payApi");
-var purchaseApi_1 = require("./src/purchaseApi");
+var PaymentsApi_1 = require("./src/PaymentsApi");
 // Creates and configures an ExpressJS web server.
 var RestRouterService = (function () {
     //Run configuration methods on the Express instance.
-    function RestRouterService(port) {
+    function RestRouterService(msgRouter, port) {
+        this.msgRouter = msgRouter;
+        this.payApi = new PaymentsApi_1.PaymentsApi(msgRouter);
         this.express = express();
         this.express.set('port', port);
         this.middleware();
@@ -38,12 +39,11 @@ var RestRouterService = (function () {
     };
     // Configure API rest.
     RestRouterService.prototype.routes = function () {
-        this.express.use('/purchase', express_1.Router()
-            .get('/', function (req, res, next) { return purchaseApi_1.default.getAll(req, res, next); })
-            .post('/', function (req, res, next) { return purchaseApi_1.default.post(req, res, next); }));
+        var _this = this;
         this.express.use('/payments', express_1.Router()
-            .get('/', function (req, res, next) { return payApi_1.default.getAll(req, res, next); })
-            .post('/', function (req, res, next) { return payApi_1.default.post(req, res, next); }));
+            .get('/', function (req, res, next) { return _this.payApi.getAll(req, res, next); })
+            .post('/', function (req, res, next) { return _this.payApi.post(req, res, next); })
+            .put('/:id', function (req, res, next) { return _this.payApi.updateOne(req, res, next); }));
     };
     return RestRouterService;
 }());

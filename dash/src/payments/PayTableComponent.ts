@@ -5,7 +5,7 @@ import {IPayment} from './domain/IPayment';
 import {PaymentDataSource} from './PaymentDataSource';
 import {RestDataSource} from '../RestDataSource';
 import {Observable} from 'rxjs/Observable';
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs';
 
 interface IColumn {
   field: string;
@@ -78,11 +78,25 @@ export class PayTableComponent implements OnDestroy {
   }
 
   onServerMsg(msg) {
-    console.log(msg);
+    if (msg.method === 'update') {
+      for (const payment of this.payments) {
+        if (payment.id === +msg.id) {
+          for (const update of msg.updates) {
+            console.log('update', update.field, 'to', update.value);
+            payment[update.field] = update.value;
+          }
+        }
+      }
+    } else {
+      console.error('Unsupported server message: ', msg.method);
+    }
   }
 
   onFieldChanged(payment, field) {
-    console.log(payment, field);
+    this.ds.update(payment.id, [{ field: field, value: payment[field] }]).subscribe(
+      result => null,
+      error => console.error(error)
+    );
   }
 
   saveColumnOrder(event) {

@@ -11,6 +11,8 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class RestDataSource {
   private url = 'http://192.168.2.91:3000/';
+  private headers = new Headers({'Content-Type': 'application/json'});
+  private options = new RequestOptions({headers: this.headers});
 
   constructor (private http: Http) {}
 
@@ -24,11 +26,9 @@ export class RestDataSource {
 
   postItem(path: string, text: string, complete: boolean): Observable<Object> {
     const body = {text: text, complete: complete};
-    const headers = new Headers({'Content-Type': 'application/json'});
-    const options = new RequestOptions({headers: headers});
 
     return this.http
-        .post(this.url + path, body, options)
+        .post(this.url + path, body, this.options)
         .map((res: Response) => res.json())
         .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }

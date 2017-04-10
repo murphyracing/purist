@@ -4,16 +4,19 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 
-import PayApi from './src/payApi';
-import purchaseApi from './src/purchaseApi';
+import { PaymentsApi } from './src/PaymentsApi';
+import { MessageRouter } from "./src/MessageRouter";
 
 // Creates and configures an ExpressJS web server.
 export class RestRouterService {
   // ref to Express instance
   public express: express.Application;
 
+  private payApi: PaymentsApi;
+
   //Run configuration methods on the Express instance.
-  constructor(port: number) {
+  constructor(private msgRouter: MessageRouter, port: number) {
+    this.payApi = new PaymentsApi(msgRouter);
     this.express = express();
     this.express.set('port', port);
     this.middleware();
@@ -44,14 +47,10 @@ export class RestRouterService {
   // Configure API rest.
   private routes(): void {
     this.express.use(
-        '/purchase', Router()
-            .get('/', (req, res, next) => purchaseApi.getAll(req, res, next))
-            .post('/', (req, res, next) => purchaseApi.post(req, res, next))
-    );
-    this.express.use(
         '/payments', Router()
-            .get('/', (req, res, next) => PayApi.getAll(req, res, next))
-            .post('/', (req, res, next) => PayApi.post(req, res, next))
+            .get('/', (req, res, next) => this.payApi.getAll(req, res, next))
+            .post('/', (req, res, next) => this.payApi.post(req, res, next))
+            .put('/:id', (req, res, next) => this.payApi.updateOne(req, res, next))
     );
   }
 

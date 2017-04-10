@@ -3,6 +3,7 @@ import * as http from "http";
 import * as socketIO from "socket.io";
 
 import { RestRouterService } from './RestRouterService';
+import {MessageRouter} from "./src/MessageRouter";
 
 class Server {
   public static readonly PORT = 3000;
@@ -11,28 +12,25 @@ class Server {
   private io: any;
   public rest: RestRouterService;
 
-  constructor() {
+  constructor(private msgRouter: MessageRouter) {
     this.port = process.env.PORT || Server.PORT;
-    this.rest = new RestRouterService(this.port);
+    this.rest = new RestRouterService(msgRouter, this.port);
 
     this.server = http.createServer(this.rest.express);
     this.io = socketIO(this.server);
-    this.io.set('origins', 'http://192.168.2.91:4200');
   }
 
   public listen(): void {
     this.server.listen(this.port, () => {
       console.log('Running server on port %s', this.port);
+
+      this.msgRouter.addSink(msg => {
+        this.io.emit('message', msg );
+      });
     });
 
-    this.io.on('connect', (socket: any) => {
+    this.io.on('connect', socket => {
       console.log('Connected client on port %s.', this.port);
-      let i = 0;
-      setInterval(() => this.io.emit('message', ++i), 1000);
-      socket.on('message', (m) => {
-        console.log('[server](message): %s', JSON.stringify(m));
-        this.io.emit('message', m);
-      });
 
       socket.on('disconnect', () => {
         console.log('Client disconnected');
@@ -41,5 +39,7 @@ class Server {
   }
 }
 
-let server = new Server();
+const msgRouter = new MessageRouter();
+
+let server = new Server(msgRouter);
 server.listen();

@@ -1,16 +1,50 @@
 import * as pg from 'pg';
 import {NextFunction, Request, Response} from 'express';
 import db from './db';
+import {MessageRouter} from "./MessageRouter";
 
-class PayApi {
-  public subscribePush(req: Request, res: Response, next: NextFunction): void {
+interface FieldUpdate {
+  field: string;
+  value: string;
+}
 
-  } /* ==== subscribePush ==== */
+export class PaymentsApi {
+  constructor (private msgRouter: MessageRouter) {}
+
+  public updateOne(req: Request, res: Response, next: NextFunction): void {
+    const paymentId: number = req.params.id;
+
+    const requestedUpdates: FieldUpdate[] = req.body;
+    const committedUpdates: FieldUpdate[] = [];
+
+    for (const update of requestedUpdates) {
+      if (update.field === 'amount') {
+        db.query(`
+          UPDATE pay.payable
+          SET amount = '${update.value}'
+          WHERE id = 
+            (SELECT payableId FROM pay.payment WHERE payment.id = ${paymentId});`)
+        .then(() => {
+          // committedUpdates.push(update);
+          const updateMsg = { method: 'update', id: paymentId, updates: [ update ] };
+          this.msgRouter.post(updateMsg);
+          res.json({success: true, message: updateMsg});
+        })
+        .catch(error => {
+          console.error("[ INSERT ] ", error);
+          res.json({success: false, error: error});
+        });
+      } else {
+        console.error('Editing field \'' + update.field + '\' is not supported yet :(');
+      }
+    }
+  } /* ==== updateOne ==== */
 
   public getAll(req: Request, res: Response, next: NextFunction): void {
     const results = [];
-    let query = `
+    const query = `
       SELECT
+        payment.id as "id",
         vendor.label AS "vendor",
         customer.label AS "customer",
         invoice.label AS "invoice",
@@ -70,5 +104,4 @@ class PayApi {
     /* -- db transaction -- */
 
   } /* ==== POST ==== */
-}
-export default new PayApi();
+};

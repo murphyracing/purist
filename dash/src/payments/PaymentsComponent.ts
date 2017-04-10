@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import { PuristData } from '../puristdata';
+import { PuristData } from '../RestDataSource';
 
 
 @Component({

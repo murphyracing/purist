@@ -9,10 +9,10 @@ import 'rxjs/add/observable/throw';
 
 
 @Injectable()
-export class PuristData {
-  private url = 'http://192.168.2.91:3000/';
-
-  constructor (private http: Http) {}
+export class RestDataSource {
+  constructor (private url: string = 'http://192.168.2.91:3000/',
+               private http: Http)
+  {}
 
   getAll(path: string): Observable<any[]> {
     return this.http

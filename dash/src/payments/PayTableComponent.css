@@ -1,0 +1,6 @@
+#payments-search.ui-widget-header {
+  display: flex;
+  flex-direction: row;
+  padding: 4px 10px;
+  border-bottom: 0 none;
+}

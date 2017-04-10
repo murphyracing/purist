@@ -1,57 +1,60 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import { PuristData } from '../puristdata';
+import {DataTable, Message} from 'primeng/primeng';
 import {Http} from '@angular/http';
-import * as $ from 'jquery';
-import 'datatables.net';
+import {IPayment} from './domain/IPayment';
+
+export interface IColumn {
+  field: string;
+}
 
 @Component({
+  moduleId: module.id,
   selector: 'app-pay-table',
   templateUrl: 'PayTableComponent.html',
   styleUrls: ['PayTableComponent.css'],
 })
-export class PayTableComponent implements AfterViewInit {
-  public columns: any[] = [
-    {name: 'vendor', title: 'Vendor', width: '30%'},
-    {name: 'customer', title: 'Customer', width: '40%'},
-    {name: 'invoice', title: 'Invoice', width: '10%'},
-    {name: 'city', title: 'City', width: '20%'}
+export class PayTableComponent implements OnInit {
+  columns: IColumn[] = [
+    {field: 'vendor'},
+    {field: 'customer'},
+    {field: 'invoice'}
   ];
-  data;
-  columnFilters = {};
-  rowsOnPage = 10;
-  sortBy = 'email';
-  sortOrder = 'asc';
-  tableWidget: any;
+  payments: IPayment[];
+  msgs: Message[];
 
   constructor (private http: Http) {
-  }
-
-  onFilter(colName, filter) {
-    const newFilters = {};
-    for (const col of this.columns) {
-      newFilters[col.name] = col.filter ? col.filter : '';
+    if (localStorage.columns) {
+      try {
+        const colSettings = JSON.parse(localStorage.columns);
+        if (colSettings) {
+          console.log(colSettings);
+          this.columns = colSettings;
+        }
+      } catch (SyntaxError) {
+        localStorage.columns = '';
+      }
     }
-    newFilters[colName] = filter;
-    this.columnFilters = newFilters;
   }
 
-  ngAfterViewInit() {
-    const exampleId: any = $('#example');
-    this.tableWidget = exampleId.DataTable({select: true});
-
+  ngOnInit() {
     this.http.get('assets/data.json')
       .subscribe((data) => {
         setTimeout(() => {
-          this.data = data.json();
-        }, 1000);
-      });
+            this.payments = <IPayment[]> data.json();
+            this.msgs = [];
+            this.msgs.push({severity: 'info', summary: 'Payments', 'detail': 'Data Ready'});
+          },
+        1000);
+    });
   }
 
-  public toInt(num: string) {
-    return +num;
+  onFieldChanged(payment, field) {
+    console.log(payment, field);
   }
 
-  public sortByWordLength = (a: any) => {
-    return a.city.length;
+  saveColumnOrder(event) {
+    const newOrder = event.columns.map(col => col.field);
+    this.columns.sort((a, b) => newOrder.indexOf(a.field) - newOrder.indexOf(b.field));
+    localStorage.columns = JSON.stringify(this.columns);
   }
 }

@@ -3,13 +3,16 @@ import {DataTable, Message} from 'primeng/primeng';
 import {Http} from '@angular/http';
 import {IPayment} from './domain/IPayment';
 import {PaymentDataSource} from './PaymentDataSource';
+import {RestDataSource} from '../RestDataSource';
 
 interface IColumn {
   field: string;
+  header: string;
 }
 
 interface IError {
   msg: string;
+  innerMsg: string;
   show: boolean;
 }
 
@@ -18,17 +21,19 @@ interface IError {
   selector: 'app-pay-table',
   templateUrl: 'PayTableComponent.html',
   styleUrls: ['PayTableComponent.css'],
+  providers: [RestDataSource, PaymentDataSource]
 })
 export class PayTableComponent {
   columns: IColumn[] = [
-    {field: 'vendor'},
-    {field: 'customer'},
-    {field: 'invoice'}
+    {field: 'type', header: 'Type'},
+    {field: 'payTo', header: 'Pay To'},
+    {field: 'invoice', header: 'Invoice #'},
+    {field: 'amount', header: 'Amount Due'}
   ];
   payments: IPayment[];
   msgs: Message[];
 
-  error: IError = { msg: '', show: false };
+  error: IError = { msg: '', innerMsg: '', show: false };
 
   constructor (private http: Http,
                private ds: PaymentDataSource) {
@@ -36,8 +41,7 @@ export class PayTableComponent {
       try {
         const colSettings = JSON.parse(localStorage.columns);
         if (colSettings) {
-          console.log(colSettings);
-          this.columns = colSettings;
+          // this.columns = colSettings;
         }
       } catch (SyntaxError) {
         localStorage.columns = '';
@@ -45,16 +49,19 @@ export class PayTableComponent {
     }
     ds.all().subscribe(
       result => {
-
+        this.payments = result.map(data => {
+          const p: IPayment = data;
+          p.type = p.vendor ? 'Bill' : 'Refund';
+          p.payTo = p.vendor ? p.vendor : p.customer;
+          return p;
+        });
       },
       error => {
         this.error.msg = `
-        I can't seem to find any payment data to show you.
-        <br>
+        I can't seem to find any payment data to show you.<br>
         When I looked in the usual place, I found this error instead:
-        <br>
-        <pre>${error}</pre>
-        `
+        `;
+        this.error.innerMsg = error;
         this.error.show = true;
       }
     );

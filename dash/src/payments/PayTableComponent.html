@@ -1,7 +1,9 @@
 <p-growl [value]="msgs"></p-growl>
 
-<p-dialog header="Error" [(visible)]="error.show">
-  <div>{{error.msg}}</div>
+<p-dialog header="Error"
+          [(visible)]="error.show">
+  <p innerHtml="{{error.msg}}"></p>
+  <pre>{{error.innerMsg}}</pre>
 </p-dialog>
 
 <div id="payments-search" class="ui-widget-header">
@@ -13,6 +15,7 @@
   [value]="payments"
   [editable]="true"
   [reorderableColumns]="true"
+  [resizableColumns]="true"
   (onColReorder)="saveColumnOrder($event)"
   [rows]="10"
   [paginator]="true"
@@ -20,7 +23,7 @@
 
   <p-column *ngFor="let col of columns"
             [field]="col.field"
-            [header]="col.field"
+            [header]="col.header"
             [editable]="true"
             [sortable]="true"
             [filter]="true">

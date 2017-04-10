@@ -50,7 +50,7 @@ class Web {
             .post('/', (req, res, next) => purchaseApi.post(req, res, next))
     );
     this.express.use(
-        '/pay', Router()
+        '/payments', Router()
             .get('/', (req, res, next) => PayApi.getAll(req, res, next))
             .post('/', (req, res, next) => PayApi.post(req, res, next))
     );

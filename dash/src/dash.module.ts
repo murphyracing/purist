@@ -10,10 +10,12 @@ import {
   DataTableModule, DialogModule, GrowlModule, OverlayPanelModule,
   SharedModule
 } from 'primeng/primeng';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     DataTableModule,

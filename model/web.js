@@ -40,7 +40,7 @@ var Web = (function () {
         this.express.use('/purchase', express_1.Router()
             .get('/', function (req, res, next) { return purchaseApi_1.default.getAll(req, res, next); })
             .post('/', function (req, res, next) { return purchaseApi_1.default.post(req, res, next); }));
-        this.express.use('/pay', express_1.Router()
+        this.express.use('/payments', express_1.Router()
             .get('/', function (req, res, next) { return payApi_1.default.getAll(req, res, next); })
             .post('/', function (req, res, next) { return payApi_1.default.post(req, res, next); }));
     };

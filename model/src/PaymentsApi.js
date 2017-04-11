@@ -20,9 +20,9 @@ var PaymentsApi = (function () {
                     _this.msgRouter.post(updateMsg);
                     res.json({ success: true, message: updateMsg });
                 })
-                    .catch(function (error) {
-                    console.error("[ INSERT ] ", error);
-                    res.json({ success: false, error: error });
+                    .catch(function (e) {
+                    console.error("[ INSERT ] ", e);
+                    res.json({ success: false, error: e.message });
                 });
             }
             else {

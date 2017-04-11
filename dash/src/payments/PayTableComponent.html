@@ -8,7 +8,11 @@
 
 <div id="payments-search" class="ui-widget-header">
   <i class="fa fa-search" style="margin:8px 4px 0 0; padding-right: 8px"></i>
-  <input #gb type="text" pInputText size="50" placeholder="Search All" style="flex: 1">
+  <input #gb
+         type="text"
+         pInputText
+         size="50"
+         placeholder="Search All" style="flex: 1">
 </div>
 
 <p-dataTable
@@ -31,8 +35,21 @@
       <span><a href="#">{{payment[col.field]}}</a></span>
     </ng-template>
     <ng-template let-col let-payment="rowData" pTemplate="editor">
-      <input type="text" [(ngModel)]="payment[col.field]" (blur)="onFieldChanged(payment, col.field)">
+        <input type="text"
+               [(ngModel)]="payment[col.field]"
+               [popover]="errorPop"
+               (blur)="onFieldChanged(payment, col.field)">
     </ng-template>
   </p-column>
 
 </p-dataTable>
+
+<popover-content
+  #errorPop
+  title="Error"
+  placement="bottom"
+  [closeOnClickOutside]="true"
+  [closeOnMouseOutside]="false"
+  [animation]="true">
+  {{fieldError}}
+</popover-content>

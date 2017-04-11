@@ -4,8 +4,8 @@ import {Http} from '@angular/http';
 import {IPayment} from './domain/IPayment';
 import {PaymentDataSource} from './PaymentDataSource';
 import {RestDataSource} from '../RestDataSource';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
+
 
 interface IColumn {
   field: string;
@@ -38,6 +38,7 @@ export class PayTableComponent implements OnDestroy {
   srvMsgStream: Subscription;
 
   error: IError = { msg: '', innerMsg: '', show: false };
+  fieldError: any;
 
   constructor (private http: Http,
                private ds: PaymentDataSource) {
@@ -93,10 +94,15 @@ export class PayTableComponent implements OnDestroy {
   }
 
   onFieldChanged(payment, field) {
-    this.ds.update(payment.id, [{ field: field, value: payment[field] }]).subscribe(
-      result => null,
-      error => console.error(error)
-    );
+    this.ds
+      .update(payment.id, [{ field: field, value: payment[field] }])
+      .subscribe(
+        result => console.log(result),
+        error => {
+          console.error(error);
+          this.fieldError = error;
+        }
+      );
   }
 
   saveColumnOrder(event) {

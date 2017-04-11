@@ -8,9 +8,10 @@ import {PayTableComponent} from './payments/PayTableComponent';
 import {DataFilterPipe} from './DataFilterPipe';
 import {
   DataTableModule, DialogModule, GrowlModule, OverlayPanelModule,
-  SharedModule
+  SharedModule, TooltipModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {PopoverModule} from 'ngx-popover';
 
 @NgModule({
   imports: [
@@ -18,14 +19,17 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    DataTableModule,
-    SharedModule,
-    GrowlModule,
-    DialogModule,
-    OverlayPanelModule,
     HttpModule,
     JsonpModule,
     NgbModule.forRoot(),
+    // PrimeNG controls
+    SharedModule,
+    DataTableModule,
+    GrowlModule,
+    DialogModule,
+    OverlayPanelModule,
+    // Other controls
+    PopoverModule
   ],
   declarations: [
     PayTableComponent,

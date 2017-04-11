@@ -30,9 +30,9 @@ export class PaymentsApi {
           this.msgRouter.post(updateMsg);
           res.json({success: true, message: updateMsg});
         })
-        .catch(error => {
-          console.error("[ INSERT ] ", error);
-          res.json({success: false, error: error});
+        .catch(e => {
+          console.error("[ INSERT ] ", e);
+          res.json({success: false, error: e.message});
         });
       } else {
         console.error('Editing field \'' + update.field + '\' is not supported yet :(');

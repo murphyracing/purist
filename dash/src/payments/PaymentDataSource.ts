@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import * as socketIO from 'socket.io-client';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 
+
 @Injectable()
 export class PaymentDataSource {
   private rootUrl = 'http://192.168.2.91:3000';
@@ -32,8 +33,20 @@ export class PaymentDataSource {
   update(id: number, updates: any[]): Observable<any> {
     const body = JSON.stringify(updates);
     return this.http
-        .put(`${this.appUrl}/${id}`, body, this.options)
-        .map((res: Response) => res.json())
-        .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+      .put(`${this.appUrl}/${id}`, body, this.options)
+      .map((res: Response) => {
+        const response = res.json();
+        if (!response.success) {
+          console.log(response.error);
+          throw new Error(
+            JSON.stringify(response.error) || 'Model update failed with no error message');
+        }
+        return response;
+      })
+      .catch(e =>
+        Observable.throw(
+          e instanceof Response ? e.json().error || 'Server error' : e
+        )
+      );
   }
 }

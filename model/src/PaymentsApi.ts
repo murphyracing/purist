@@ -35,7 +35,9 @@ export class PaymentsApi {
           res.json({success: false, error: e.message});
         });
       } else {
-        console.error('Editing field \'' + update.field + '\' is not supported yet :(');
+        const e = new Error('Editing field \'' + update.field + '\' is not supported yet :(');
+        console.error(e);
+        res.json({success: false, error: e.message});
       }
     }
   } /* ==== updateOne ==== */

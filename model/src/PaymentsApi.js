@@ -26,7 +26,9 @@ var PaymentsApi = (function () {
                 });
             }
             else {
-                console.error('Editing field \'' + update.field + '\' is not supported yet :(');
+                var e = new Error('Editing field \'' + update.field + '\' is not supported yet :(');
+                console.error(e);
+                res.json({ success: false, error: e.message });
             }
         };
         for (var _i = 0, requestedUpdates_1 = requestedUpdates; _i < requestedUpdates_1.length; _i++) {

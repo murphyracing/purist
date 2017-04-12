@@ -11,7 +11,6 @@ import {
   SharedModule, TooltipModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {PopoverModule} from 'ngx-popover';
 
 @NgModule({
   imports: [
@@ -28,12 +27,10 @@ import {PopoverModule} from 'ngx-popover';
     GrowlModule,
     DialogModule,
     OverlayPanelModule,
-    // Other controls
-    PopoverModule
   ],
   declarations: [
     PayTableComponent,
-    DataFilterPipe
+    DataFilterPipe,
   ],
   bootstrap: [ PayTableComponent ]
 })

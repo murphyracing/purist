@@ -31,25 +31,19 @@
             [editable]="true"
             [sortable]="true"
             [filter]="true">
-    <ng-template let-col let-payment="rowData" pTemplate="body">
-      <span><a href="#">{{payment[col.field]}}</a></span>
+    <ng-template let-col let-payment="rowData" pTemplate="body" >
+      <span *ngIf="col.error" (mouseenter)="errorTip.toggle($event)" (mouseleave)="errorTip.toggle($event)"><a href="#">{{payment[col.field]}}</a></span>
+      <span *ngIf="!col.error"><a href="#">{{payment[col.field]}}</a></span>
     </ng-template>
     <ng-template let-col let-payment="rowData" pTemplate="editor">
         <input type="text"
                [(ngModel)]="payment[col.field]"
-               [popover]="errorPop"
-               (blur)="onFieldChanged(payment, col.field)">
+               (blur)="onFieldChanged(payment, col)">
     </ng-template>
   </p-column>
 
 </p-dataTable>
 
-<popover-content
-  #errorPop
-  title="Error"
-  placement="bottom"
-  [closeOnClickOutside]="true"
-  [closeOnMouseOutside]="false"
-  [animation]="true">
-  {{fieldError}}
-</popover-content>
+<p-overlayPanel #errorTip>
+  Content
+</p-overlayPanel>

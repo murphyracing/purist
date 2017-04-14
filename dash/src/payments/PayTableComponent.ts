@@ -5,8 +5,6 @@ import {IPayment} from './domain/IPayment';
 import {PaymentDataSource} from './PaymentDataSource';
 import {RestDataSource} from '../RestDataSource';
 import {Subscription} from 'rxjs/Subscription';
-import {TooltipService} from 'tooltip/TooltipService';
-import {TooltipContentComponent} from '../tooltip/TooltipContentComponent';
 
 
 interface IColumn {
@@ -25,7 +23,7 @@ interface IError {
   selector: 'mrp-pay-table',
   templateUrl: 'PayTableComponent.html',
   styleUrls: ['PayTableComponent.css'],
-  providers: [RestDataSource, PaymentDataSource, TooltipService]
+  providers: [RestDataSource, PaymentDataSource]
 })
 export class PayTableComponent implements OnDestroy {
   columns: IColumn[] = [
@@ -42,8 +40,7 @@ export class PayTableComponent implements OnDestroy {
   error: IError = { msg: '', innerMsg: '', show: false };
   fieldError: any;
 
-  constructor (private tooltips: TooltipService,
-               private http: Http,
+  constructor (private http: Http,
                private ds: PaymentDataSource) {
 
     this.srvMsgStream = ds.serverMessages().subscribe(msg => this.onServerMsg(msg));

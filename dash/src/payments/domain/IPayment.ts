@@ -7,4 +7,5 @@ export interface IPayment {
   invoice: string;
   amount: string;
   approvedOn: Date;
+  fieldErrors: any;
 }

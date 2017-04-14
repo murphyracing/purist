@@ -4,3 +4,12 @@
   padding: 4px 10px;
   border-bottom: 0 none;
 }
+
+div.field-error {
+  white-space: nowrap;
+}
+.field-error {
+  background-color: #f2dede;
+  display: inline-block;
+  width: 100%;
+}

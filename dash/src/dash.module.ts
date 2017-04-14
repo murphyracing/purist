@@ -12,6 +12,7 @@ import {
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -26,7 +27,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     DataTableModule,
     GrowlModule,
     DialogModule,
-    OverlayPanelModule,
+    TooltipModule
   ],
   declarations: [
     PayTableComponent,

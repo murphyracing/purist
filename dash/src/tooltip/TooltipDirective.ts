@@ -1,22 +1,25 @@
-import {Directive, HostListener, Input, OnDestroy, ElementRef} from '@angular/core';
+import {Directive, HostListener, Input, OnDestroy, ElementRef, OnInit} from '@angular/core';
 import {TooltipService} from './TooltipService';
 
 
 @Directive({ selector: '[mrpTooltip]' })
-export class TooltipDirective implements OnDestroy {
+export class TooltipDirective implements OnInit, OnDestroy {
   @Input() tooltipTitle = '';
   private id: string;
 
   constructor(private tooltipService: TooltipService, private element: ElementRef) { }
 
-  @HostListener('mouseenter')
-  onMouseEnter(): void {
+  ngOnInit() {
     this.id = String(Math.random());
     this.tooltipService.components.push({
       id: this.id,
       ref: this.element,
       title: this.tooltipTitle
     });
+  }
+
+  @HostListener('mouseenter')
+  onMouseEnter(): void {
   }
 
   @HostListener('mouseleave')

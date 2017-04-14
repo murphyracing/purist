@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ComponentFactoryResolver, ElementRef, Input, OnDestroy, OnInit, ViewContainerRef} from '@angular/core';
 import {DataTable, Message} from 'primeng/primeng';
 import {Http} from '@angular/http';
 import {IPayment} from './domain/IPayment';
@@ -6,12 +6,12 @@ import {PaymentDataSource} from './PaymentDataSource';
 import {RestDataSource} from '../RestDataSource';
 import {Subscription} from 'rxjs/Subscription';
 import {TooltipService} from 'tooltip/TooltipService';
+import {TooltipContentComponent} from '../tooltip/TooltipContentComponent';
 
 
 interface IColumn {
   field: string;
   header: string;
-  error: string;
 }
 
 interface IError {
@@ -29,10 +29,10 @@ interface IError {
 })
 export class PayTableComponent implements OnDestroy {
   columns: IColumn[] = [
-    {field: 'type', header: 'Type', error: ''},
-    {field: 'payTo', header: 'Pay To', error: ''},
-    {field: 'invoice', header: 'Invoice #', error: ''},
-    {field: 'amount', header: 'Amount Due', error: ''}
+    {field: 'type', header: 'Type'},
+    {field: 'payTo', header: 'Pay To'},
+    {field: 'invoice', header: 'Invoice #'},
+    {field: 'amount', header: 'Amount Due'}
   ];
   payments: IPayment[];
   msgs: Message[];
@@ -42,8 +42,10 @@ export class PayTableComponent implements OnDestroy {
   error: IError = { msg: '', innerMsg: '', show: false };
   fieldError: any;
 
-  constructor (private http: Http,
+  constructor (private tooltips: TooltipService,
+               private http: Http,
                private ds: PaymentDataSource) {
+
     this.srvMsgStream = ds.serverMessages().subscribe(msg => this.onServerMsg(msg));
 
     if (localStorage.columns) {
@@ -62,6 +64,7 @@ export class PayTableComponent implements OnDestroy {
           const p: IPayment = data;
           p.type = p.vendor ? 'Bill' : 'Refund';
           p.payTo = p.vendor ? p.vendor : p.customer;
+          p.fieldErrors = {};
           return p;
         });
       },
@@ -95,14 +98,19 @@ export class PayTableComponent implements OnDestroy {
     }
   }
 
-  onFieldChanged(payment, col) {
+  onFieldChanged(payment: IPayment, col: IColumn) {
     this.ds
       .update(payment.id, [{ field: col.field, value: payment[col.field] }])
       .subscribe(
-        result => console.log(result),
+        result => {
+          console.log(result);
+          if (payment.fieldErrors[col.field]) {
+            payment.fieldErrors[col.field] = '';
+          }
+        },
         error => {
           console.error(error);
-          col.error = error;
+          payment.fieldErrors[col.field] = error;
         }
       );
   }

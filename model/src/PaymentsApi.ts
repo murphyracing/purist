@@ -47,9 +47,16 @@ export class PaymentsApi {
     const query = `
       SELECT
         payment.id as "id",
+        
+        payable.vendorId AS "vendorId",
         vendor.label AS "vendor",
+        
+        payable.customerId AS "customerId",
         customer.label AS "customer",
+        
+        payable.invoiceId AS "invoiceId",
         invoice.label AS "invoice",
+        
         payable.amount AS "amount",
         payable.approvedOn AS "approved",
         "check".number AS "check #",

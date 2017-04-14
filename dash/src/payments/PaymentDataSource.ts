@@ -14,7 +14,7 @@ export class PaymentDataSource {
 
   constructor (private http: Http) {}
 
-  all(): Observable<IPayment[]> {
+  all(): Observable<any[]> {
     return this.http
       .get(this.appUrl)
       .map((res: Response) => res.json())

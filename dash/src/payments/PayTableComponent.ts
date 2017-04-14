@@ -7,15 +7,24 @@ import {RestDataSource} from '../RestDataSource';
 import {Subscription} from 'rxjs/Subscription';
 
 
-interface IColumn {
-  field: string;
-  header: string;
-}
-
 interface IError {
   msg: string;
   innerMsg: string;
   show: boolean;
+}
+
+interface IField {
+  value: any;
+  error: any;
+  refId: number;
+}
+export interface IRow {
+  id: number;
+  fields: {};
+}
+interface IColumn {
+  field: string;
+  header: string;
 }
 
 @Component({
@@ -32,13 +41,12 @@ export class PayTableComponent implements OnDestroy {
     {field: 'invoice', header: 'Invoice #'},
     {field: 'amount', header: 'Amount Due'}
   ];
-  payments: IPayment[];
+  rows: IRow[];
   msgs: Message[];
 
   srvMsgStream: Subscription;
 
   error: IError = { msg: '', innerMsg: '', show: false };
-  fieldError: any;
 
   constructor (private http: Http,
                private ds: PaymentDataSource) {
@@ -57,12 +65,17 @@ export class PayTableComponent implements OnDestroy {
     }
     ds.all().subscribe(
       result => {
-        this.payments = result.map(data => {
-          const p: IPayment = data;
-          p.type = p.vendor ? 'Bill' : 'Refund';
-          p.payTo = p.vendor ? p.vendor : p.customer;
-          p.fieldErrors = {};
-          return p;
+        this.rows = result.map(data => {
+          console.log(data);
+          return <IRow> {
+            id: data.id,
+            fields: {
+              type: {value: data.vendor ? 'Bill' : 'Refund'},
+              payTo: {value: data.vendor ? data.vendor : data.customer},
+              vendor: {value: data.vendor, refId: data.vendorId},
+              customer: {value: data.customer, refId: data.customerId},
+            }
+          };
         });
       },
       error => {
@@ -82,7 +95,7 @@ export class PayTableComponent implements OnDestroy {
 
   onServerMsg(msg) {
     if (msg.method === 'update') {
-      for (const payment of this.payments) {
+      for (const payment of this.rows) {
         if (payment.id === +msg.id) {
           for (const update of msg.updates) {
             console.log('update', update.field, 'to', update.value);
@@ -95,26 +108,32 @@ export class PayTableComponent implements OnDestroy {
     }
   }
 
-  onFieldChanged(payment: IPayment, col: IColumn) {
-    this.ds
-      .update(payment.id, [{ field: col.field, value: payment[col.field] }])
-      .subscribe(
-        result => {
-          console.log(result);
-          if (payment.fieldErrors[col.field]) {
-            payment.fieldErrors[col.field] = '';
+  onFieldChanged(row: IRow, col: IColumn) {
+    if (this.validate(row)) {
+      this.ds
+        .update(row.id, [{field: col.field, value: row[col.field]}])
+        .subscribe(
+          result => {
+            console.log(result);
+            if (row.fields[col.field].error) {
+              row.fields[col.field].error = '';
+            }
+          },
+          error => {
+            console.error(error);
+            row.fields[col.field].error = error;
           }
-        },
-        error => {
-          console.error(error);
-          payment.fieldErrors[col.field] = error;
-        }
-      );
+        );
+    }
   }
 
   saveColumnOrder(event) {
     const newOrder = event.columns.map(col => col.field);
     this.columns.sort((a, b) => newOrder.indexOf(a.field) - newOrder.indexOf(b.field));
     localStorage.columns = JSON.stringify(this.columns);
+  }
+
+  private validate(row: IRow): boolean {
+    return true;
   }
 }

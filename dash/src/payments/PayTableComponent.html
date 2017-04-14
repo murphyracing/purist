@@ -16,7 +16,7 @@
 </div>
 
 <p-dataTable
-  [value]="payments"
+  [value]="rows"
   [editable]="true"
   [reorderableColumns]="true"
   [resizableColumns]="true"
@@ -32,36 +32,47 @@
             [sortable]="true"
             [filter]="true">
 
-    <ng-template let-col let-payment="rowData" pTemplate="body">
-      <div *ngIf="payment.fieldErrors[col.field]; else noErrorBody" class="field-error">
+    <ng-template let-col let-row="rowData" pTemplate="body">
+      <!-- Error body -->
+      <div *ngIf="row.fields[col.field].error; else noErrorBody" class="field-error">
         <span
           class="field-error"
-          pTooltip="{{payment.fieldErrors[col.field]}}"
+          pTooltip="{{row.fields[col.field].error}}"
           tooltipPosition="bottom">
-          <a href="#">p {{payment[col.field]}}</a>
+          <a href="#">p {{row.fields[col.field].value}}</a>
         </span>
       </div>
-
+      <!-- No-error body -->
       <ng-template #noErrorBody>
-        <span><a href="#">p {{payment[col.field]}}</a></span>
+        <span><a href="#">{{row.fields[col.field].value}}</a></span>
       </ng-template>
     </ng-template>
 
-    <ng-template let-col let-payment="rowData" pTemplate="editor">
-      <div *ngIf="payment.fieldErrors[col.field]; else noErrorEdit">
-        <input
-          type="text"
-          class="field-error"
-          [(ngModel)]="payment[col.field]"
-          pTooltip="{{payment.fieldErrors[col.field]}}" tooltipPosition="bottom"
-          (blur)="onFieldChanged(payment, col)">
+    <ng-template let-col let-row="rowData" pTemplate="editor">
+      <!-- Field references another table, so use a dropdown with values from that table -->
+      <div *ngIf="row.fields[row.field].refId">
+        <p-dropdown [(ngModel)]="row.fields[row.field].refData"
       </div>
 
-      <ng-template #noErrorEdit>
-        <input
-          type="text"
-          [(ngModel)]="payment[col.field]"
-          (blur)="onFieldChanged(payment, col)">
+      <!-- Field is plain text input -->
+      <ng-template #textEditor>
+        <!-- Error editor -->
+        <div *ngIf="row.fieldErrors[col.field]; else noErrorEdit">
+          <input
+            type="text"
+            class="field-error"
+            [(ngModel)]="row[col.field]"
+            pTooltip="{{row.fieldErrors[col.field]}}" tooltipPosition="bottom"
+            (blur)="onFieldChanged(row, col)">
+        </div>
+
+        <!-- No-error editor -->
+        <ng-template #noErrorEdit>
+          <input
+            type="text"
+            [(ngModel)]="row[col.field].value"
+            (blur)="onFieldChanged(row, col)">
+        </ng-template>
       </ng-template>
     </ng-template>
   </p-column>

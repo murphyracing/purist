@@ -1,11 +1,15 @@
 export interface IPayment {
   id: number;
-  type: string;
-  payTo: string;
+
+  vendorId: number;
   vendor: string;
+
+  customerId: number;
   customer: string;
+
+  invoiceId: number;
   invoice: string;
+
   amount: string;
   approvedOn: Date;
-  fieldErrors: any;
 }

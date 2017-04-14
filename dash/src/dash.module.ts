@@ -27,7 +27,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     DataTableModule,
     GrowlModule,
     DialogModule,
-    TooltipModule
+    TooltipModule,
+    OverlayPanelModule
   ],
   declarations: [
     PayTableComponent,
